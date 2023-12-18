@@ -100,6 +100,55 @@ SELECT
 FROM Books b
 GROUP BY b.name
 
+---prosječan broj posudbi po primjerku knjige po svakoj državi
+SELECT c.name, (SELECT AVG(cnt) FROM (SELECT COUNT (*) AS cnt FROM Lends l WHERE l.bookId = b.bookId)) FROM COUNTRIES c
+JOIN Authors a on a.countryId = c.countryId
+JOIN MainAuthorBooks mab ON mab.authorId = a.authorId
+JOIN SideAuthorBooks sab ON sab.authorId = a.authorId
+JOIN Books b ON b.bookId = sab.bookId OR b.bookId = mab.bookId
+
+---broj autora (koji su objavili više od 5 knjiga) po struci, desetljeću rođenja i spolu; 
+---u slučaju da je broj autora manji od 10, ne prikazuj kategoriju; poredaj prikaz po desetljeću rođenja
+SELECT 
+(SELECT COUNT(*) FROM Authors au 
+ 	WHERE au.field = a.field AND (SELECT COUNT(*) FROM Books b
+								 	JOIN MainAuthorBooks mab ON mab.bookId = b.bookId
+									JOIN SideAuthorBooks sab ON sab.bookId = b.bookId
+								 	WHERE mab.authorId = au.authorId OR sab.authorId = au.authorId
+								 )>5),
+a.field,
+
+(SELECT COUNT(*) FROM Authors au 
+ 	WHERE (SELECT EXTRACT(DECADE FROM au.dateOfBirth)) = (SELECT EXTRACT(DECADE FROM a.dateOfBirth)) AND (SELECT COUNT(*) FROM Books b
+								 	JOIN MainAuthorBooks mab ON mab.bookId = b.bookId
+									JOIN SideAuthorBooks sab ON sab.bookId = b.bookId
+								 	WHERE mab.authorId = au.authorId OR sab.authorId = au.authorId
+								 )>5),
+								 
+(SELECT EXTRACT(DECADE FROM a.dateOfBirth) AS Decade),
+
+(SELECT COUNT(*) FROM Authors au 
+ 	WHERE au.gender = a.gender AND (SELECT COUNT(*) FROM Books b
+								 	JOIN MainAuthorBooks mab ON mab.bookId = b.bookId
+									JOIN SideAuthorBooks sab ON sab.bookId = b.bookId
+								 	WHERE mab.authorId = au.authorId OR sab.authorId = au.authorId
+								 )>5),
+
+CASE WHEN gender = 0 THEN 'Not known'
+WHEN gender = 1 THEN 'Male'
+WHEN gender = 2 THEN 'Female'
+ELSE 'Not applicable' END AS gender
+
+FROM Authors a
+
+---10 najbogatijih autora, ako po svakoj knjizi dobije ... €
+---SELECT AuthorId, firstName, lastName,
+
+---(SELECT )
+
+---FROM Authors a
+
+
 
 
 

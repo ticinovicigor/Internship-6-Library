@@ -39,7 +39,8 @@ CREATE TABLE Authors(
 	lastName VARCHAR NOT NULL UNIQUE,
 	dateOfBirth TIMESTAMP,
 	countryId INT REFERENCES Countries(countryId),
-	gender INT
+	gender INT,
+	field VARCHAR
 );
 
 CREATE TABLE MainAuthorBooks(
