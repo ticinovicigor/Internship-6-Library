@@ -13,7 +13,8 @@ CREATE TABLE Librarians(
 
 CREATE TABLE Users(
 	userId SERIAL PRIMARY KEY,
-	name VARCHAR NOT NULL UNIQUE
+	name VARCHAR NOT NULL UNIQUE,
+	libraryId INT REFERENCES Libraries(libraryId)
 );
 
 CREATE TABLE Books(
@@ -72,3 +73,29 @@ CREATE TABLE Lends(
 	isExtended INT,
 	PRIMARY KEY(bookId, userId)
 );
+
+---CREATE TRIGGER isLibraryOpen
+---    AFTER UPDATE ON Lends
+---    FOR EACH ROW
+---    WHEN ()
+---    EXECUTE FUNCTION ;
+	
+---do 3 posudbe po osobi
+
+CREATE PROCEDURE LendBook(book INT, client INT)
+LANGUAGE SQL
+AS $$
+INSERT INTO Lends(bookId, userId, date, isExtended) values (book, client, NOW(), 0);
+$$;
+
+---CALL LendBook(1, 1);
+
+CREATE PROCEDURE ExtendLend(book INT, client INT)
+LANGUAGE SQL
+AS $$
+UPDATE Lends
+SET isExtended = 40
+WHERE bookId = book AND userId = client
+$$;
+
+---CALL ExtendLend(1, 1);

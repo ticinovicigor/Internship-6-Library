@@ -1,13 +1,13 @@
 ---ime, prezime, spol (ispisati ‘MUŠKI’, ‘ŽENSKI’, ‘NEPOZNATO’, ‘OSTALO’;), ime države i 
 ---prosječna plaća u toj državi svakom autoru
-SELECT a.name, a.gender, c.name, c.avgPay FROM Authors a
+SELECT name, gender, c.name, c.avgPay FROM Authors a
 JOIN Countries c ON c.countryId = a.countryId
 
 ---naziv i datum objave svake znanstvene knjige zajedno s imenima glavnih autora koji su na njoj radili, 
 ---pri čemu imena autora moraju biti u jednoj ćeliji i u obliku Prezime, I.; 
 ---npr. Puljak, I.; Godinović, N.; Bilušić, A.
 SELECT name, dateOfPublishing, 
-(STRING_AGG(CONCAT(a.lastName, ',', SUBSTRING(a.firstName, 1, 1), '.'), ';')) AS MainAuthors FROM Books b
+(STRING_AGG(CONCAT(a.lastName, ', ', SUBSTRING(a.firstName, 1, 1), '.'), ';')) AS MainAuthors FROM Books b
 JOIN MainAuthorBooks mab ON mab.bookId = b.bookId
 JOIN Authors a ON a.authorId = mab.authorId
 WHERE b.bookType = 'znanstvena'
@@ -60,7 +60,7 @@ JOIN MainAuthorBooks mab ON mab.bookId = b.bookId
 JOIN SideAuthorBooks sab ON sab.bookId = b.bookId
 JOIN Authors a ON a.authorId = mab.authorId OR a.authorId = sab.authorId
 JOIN Countries c ON c.countryId = a.countryId
-WHERE b.bookType = 'umjetnicka'
+WHERE b.bookType = 'umjetnička'
 GROUP BY c.name, (SELECT COUNT(*) FROM Authors au WHERE au.countryId = c.countryId), c.population
 
 
