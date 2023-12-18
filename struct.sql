@@ -68,6 +68,6 @@ CREATE TABLE Lends(
 	userId INT REFERENCES Users(userId),
 	date TIMESTAMP,
 	dateReturned TIMESTAMP,
-	isExtended BOOL,
+	isExtended INT,
 	PRIMARY KEY(bookId, userId)
 );
