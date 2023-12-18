@@ -19,7 +19,8 @@ CREATE TABLE Users(
 CREATE TABLE Books(
 	bookId SERIAL PRIMARY KEY,
 	name VARCHAR NOT NULL UNIQUE,
-	booktype VARCHAR NOT NULL
+	booktype VARCHAR NOT NULL,
+	dateOfPublishing TIMESTAMP
 );
 
 
@@ -34,7 +35,8 @@ CREATE TABLE Countries(
 
 CREATE TABLE Authors(
 	authorId SERIAL PRIMARY KEY,
-	name VARCHAR NOT NULL UNIQUE,
+	firstName VARCHAR NOT NULL UNIQUE,
+	lastName VARCHAR NOT NULL UNIQUE,
 	dateOfBirth TIMESTAMP,
 	countryId INT REFERENCES Countries(countryId),
 	gender INT
@@ -52,4 +54,20 @@ CREATE TABLE SideAuthorBooks(
 	bookId INT REFERENCES Books(bookId),
 	
 	PRIMARY KEY(authorId, bookId)
+);
+
+CREATE TABLE LibraryBooks(
+	libraryId INT REFERENCES Libraries(libraryId),
+	bookId INT REFERENCES Books(bookId),
+	
+	PRIMARY KEY(libraryId, bookId)
+);
+
+CREATE TABLE Lends(
+	bookId INT REFERENCES Books(bookId),
+	userId INT REFERENCES Users(userId),
+	date TIMESTAMP,
+	dateReturned TIMESTAMP,
+	isExtended BOOL,
+	PRIMARY KEY(bookId, userId)
 );
